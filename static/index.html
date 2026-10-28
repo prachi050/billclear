@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BillClear</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="banner" role="note">Sample data only. Fictional insurer and people. Do not enter real medical information.</div>
+<header>
+  <h1>BillClear</h1>
+  <p class="sub">Understand your medical statements in plain words.</p>
+  <p id="agent-status" class="agent" aria-live="polite"></p>
+</header>
+<div class="member"><div class="avatar" aria-hidden="true">AR</div><div class="who"><b>Alex Rivera (sample)</b><span>Member ID SAMPLE-0001 &middot; Northfield Health Plan (fictional)</span></div></div>
+
+<section class="wrap" id="summary" aria-label="Summary"></section>
+<main>
+  <section id="list-panel" aria-label="Statements">
+    <div class="card upload">
+      <h2>Add a statement</h2>
+      <p class="meta">Upload a photo of a <b>sample</b> statement (PNG or JPG). Never upload a real bill.</p>
+      <input type="file" id="file" accept="image/png,image/jpeg" aria-label="Upload a sample statement image">
+      <p class="meta">Or try a sample:</p>
+      <div class="row" id="samples">
+        <button class="ghost" data-s="duplicate">Duplicate charge</button>
+        <button class="ghost" data-s="out_of_network">Out of network</button>
+        <button class="ghost" data-s="denied">Denied claim</button>
+        <button class="ghost" data-s="clear">Clean bill</button>
+        <button class="ghost" data-s="blurry">Blurry photo</button>
+      </div>
+      <div id="upload-result" aria-live="polite"></div>
+    </div>
+    <h2>Your statements</h2>
+    <div class="tabs" role="tablist" aria-label="Filter statements">
+      <button role="tab" data-f="all" aria-selected="true">All</button>
+      <button role="tab" data-f="attention" aria-selected="false">Needs attention</button>
+      <button role="tab" data-f="paid" aria-selected="false">Paid</button>
+    </div>
+    <ul id="claims" class="claims"></ul>
+    <button id="reset" class="link">Reset demo data</button>
+  </section>
+  <section id="detail-panel" aria-live="polite">
+    <div class="card welcome">
+      <h2>Welcome</h2>
+      <p>These sample statements are confusing on purpose. Pick one and BillClear will explain it, point out anything unusual, and help you ask the right questions.</p>
+      <p class="meta">Try <b>Riverside Family Clinic, Sep 18</b> for a possible duplicate, or <b>Evergreen Imaging Center</b> for a surprise out-of-network bill.</p>
+    </div>
+  </section>
+  <section id="history-panel" class="full" aria-label="Appeal history"></section>
+</main>
+<footer>
+  BillClear explains statements and suggests questions to ask. It does not give medical, legal or financial advice.
+  Nothing is ever sent: appeals in this demo are only marked as sent.
+</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>
