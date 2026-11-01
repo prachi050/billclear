@@ -45,6 +45,7 @@ Set it up in your own terminal. Never put the key in a file, in code, or on GitH
 ```
 export MODEL_API_KEY="your-key"
 export BILLCLEAR_MODEL=meta
+export META_REASONING=low         # avoids empty replies from the model spending its budget on reasoning
 python scripts/check_meta.py          # tests the connection step by step
 python -m uvicorn app.main:app --port 8010
 ```
@@ -54,7 +55,7 @@ Without a key, or if the API fails, BillClear falls back to the mock explainer a
 - **Number checker** (`app/checker.py`): pulls every dollar amount out of the explanation and compares it with the statement.
 - **Reading verification** (`app/reader.py`): line items must add up to the total, and billed minus discount minus plan paid must equal what you owe. If not, BillClear refuses instead of guessing.
 - `python -m evals.run_eval`: tests the checker on 400 invented statements with errors **we inject**. This tests the checker, not a model.
-- `python -m evals.run_real_eval`: measures the **real model** (about 25 calls). Read the flagged cases yourself before quoting any number.
+- `python -m evals.run_real_eval`: measures the **real model** (about 25 calls). Read the flagged cases yourself before quoting any number. One run on invented sample data: 20 explanations with 0 flagged by the checker, and 4 of 4 sample images read and verified. This is a small test, not a claim about real bills.
 
 ## Try the WebMCP tools
 WebMCP is experimental. In a recent Chrome, turn on `chrome://flags/#enable-webmcp-testing`, restart,
@@ -71,4 +72,4 @@ Tools: `get_claims`, `load_sample_statement`, `get_claim_detail`, `explain_charg
 - Editing a letter cancels its approval.
 
 ## Disclosure
-Implementation was AI-assisted. Idea, scope, safety rules and review are mine. (Edit this line to say what you personally did.)
+BillClear started before the hackathon as a sample-data demo. During the hackathon I added the Meta Model API reader and explanations, the number checker with measurements, and the WebMCP agent tools. Much of the code was written with AI coding tools. I designed the product, the safety rules and the decisions, and I reviewed and tested the result.
