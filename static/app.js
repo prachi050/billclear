@@ -241,7 +241,7 @@ function registerWebMCP() {
   const tools = [
     {
       name: "get_claims",
-      description: "List all sample statements with provider, date, amounts and any flags (duplicate, out_of_network, denied, not_a_bill).",
+      description: "List all statements with claim_id, provider, date, amounts and any flags (duplicate, out_of_network, denied, not_a_bill). Call this first to find a claim_id, for example for Maple Street Clinic.",
       inputSchema: { type: "object", properties: {} },
       annotations: { readOnlyHint: true },
       execute: async () => text(await api("/api/claims")),
@@ -264,7 +264,10 @@ function registerWebMCP() {
       description: "Get a plain-language AI explanation of one statement, together with a number check. The check compares every dollar amount in the explanation with the statement. If check.ok is false, do NOT repeat the explanation to the person. Tell them which number did not match.",
       inputSchema: { type: "object", properties: idProp, required: ["claim_id"] },
       annotations: { readOnlyHint: true },
-      execute: async ({ claim_id }) => text(await api(`/api/claims/${encodeURIComponent(claim_id)}/ai-explain`)),
+      execute: async ({ claim_id }) => {
+        if (currentId !== claim_id) await showClaim(claim_id);
+        return text(await api(`/api/claims/${encodeURIComponent(claim_id)}/ai-explain`));
+      },
     },
     {
       name: "explain_charge",
