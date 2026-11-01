@@ -171,6 +171,7 @@ function refresh(id) { showClaim(id); }
 // ---------- Appeal: draft, edit, approve (person only), send ----------
 async function draftAppeal(claimId, note) {
   const a = await api("/api/appeals/draft", { method: "POST", body: { claim_id: claimId, note } });
+  approvedByPerson.delete(a.id);
   renderAppeal(a);
   return a;
 }
@@ -295,7 +296,15 @@ function registerWebMCP() {
         if (!approvedByPerson.has(appeal_id)) {
           return text({ sent: false, reason: "The person has not approved this appeal on the page yet. Ask them to review it and click the approve button." });
         }
-        return text({ sent: true, ...(await api(`/api/appeals/${appeal_id}/submit`, { method: "POST" })) });
+        try {
+          const r = await api(`/api/appeals/${appeal_id}/submit`, { method: "POST" });
+          const ta = $("#appeal-body"), h = $("#appeal-area h3");
+          if (ta) { renderAppeal({ id: appeal_id, reason: h ? h.textContent : "Appeal", body: ta.value, claim_id: currentId, status: "sent" }); $("#appeal-msg").textContent = r.note; }
+          toast("Appeal marked as sent (demo)"); loadHistory();
+          return text({ sent: true, ...r });
+        } catch (e) {
+          return text({ sent: false, reason: String(e.message || e) });
+        }
       },
     },
   ];
