@@ -111,14 +111,15 @@ def ai_explain(claim_id: str, corrupt: str | None = None):
     with db.conn() as c:
         claim = _claim_or_404(c, claim_id)
         charges = _charges(c, claim_id)
-    m = model.get_model()
+    m = model.MockModel() if corrupt else model.get_model()
     try:
         text = m.explain(claim, charges, corrupt=corrupt)
     except Exception as e:  # model unavailable: fall back so the page never breaks
         m = model.MockModel()
         text = m.explain(claim, charges)
         text = "(The AI model could not be reached, so this is the basic explanation.) " + text
-    return {"model": m.name, "explanation": text, "check": checker.check_explanation(claim, charges, text)}
+    label = "Demo: a deliberately wrong sentence, not from Meta" if corrupt else m.name
+    return {"model": label, "explanation": text, "check": checker.check_explanation(claim, charges, text)}
 
 
 SAMPLES = {"duplicate", "out_of_network", "denied", "clear", "blurry"}
