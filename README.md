@@ -14,7 +14,7 @@ Do not enter real medical information. This is a portfolio prototype, not a serv
 
 ## The full flow
 1. **Photo in.** Upload a photo of a SAMPLE statement, or pick a bundled sample.
-2. **Read.** A reader turns the image into fields. Today that is OCR (Tesseract, not AI). The hackathon model plugs in as a better reader (`app/reader.py`, untested).
+2. **Read.** A reader turns the image into fields. With a Meta key it uses the Meta vision model (app/reader.py); otherwise it falls back to OCR (Tesseract, not AI).
 3. **Verify.** The line items must add up to the total, and billed minus discount minus plan paid must equal what you owe. If not, BillClear refuses and says why. It never guesses.
 4. **Explain and flag.** Plain-words explanation, plus flags: duplicate charge, out of network, denied, not a bill.
 5. **Check the AI.** Every number in the explanation is checked against the statement.
@@ -63,7 +63,7 @@ and open the page. The header line shows how many tools registered. To drive the
 use Chrome's Model Context Tool Inspector or the Example Agentic Chrome Extension (needs your own model API key).
 Without WebMCP the page works normally.
 
-Tools: `get_claims`, `load_sample_statement`, `get_claim_detail`, `explain_charge`, `draft_appeal`, `submit_appeal`.
+Tools: `get_claims`, `load_sample_statement`, `get_claim_detail`, `get_checked_explanation`, `explain_charge`, `draft_appeal`, `submit_appeal`.
 `submit_appeal` is marked `consequentialHint` and refuses unless the person clicked Approve on the page.
 
 ## Design choices
